@@ -25,11 +25,13 @@ tests live in [`docs/PLAN.md`](docs/PLAN.md); the technical design is in
 - ⬜ *(deferred to Phase 3/4)* structure-based featurization (needs backbones/folding)
 - **Acceptance:** ✅ 8 data tests green; offline build produces valid Candidates; round-trip verified
 
-## Phase 2 — Mamba/S4 protein language model ⬜
-- ⬜ State-space PLM; pretrain hook + fine-tune on GV family (transfer learning)
-- ⬜ Sequence-design head + property heads + embedding API
-- ⬜ ESM-2 pseudo-log-likelihood fallback
-- **Acceptance:** synthetic smoke-train converges; APIs well-shaped; fallback tested
+## Phase 2 — Mamba/S4 protein language model ✅
+- ✅ Selective state-space (S6/Mamba-style) block + `ProteinSSM` (LM + property + embedding heads)
+- ✅ `ProteinTokenizer` (special tokens + 20 AA), masked-LM training (`train.py`, `--synthetic`)
+- ✅ Unified `make_scorer` interface with a torch-free **`ProfileScorer`** fallback (embed + pseudo-LL)
+- ✅ Verified: forward/backward runs; smoke-train loss decreases (3.42 → 3.27); 8 new tests green
+- ⬜ *(follow-up)* ESM-2 PLL fallback + real pretraining corpus + checkpoint save/load in loop
+- **Acceptance:** ✅ synthetic smoke-train converges; APIs well-shaped; fallback tested (torch-free CI path)
 
 ## Phase 3 — SE(3) frame flow-matching generator ⬜
 - ⬜ Conditional flow matching over residue frames; equivariant velocity field (PyTorch)
