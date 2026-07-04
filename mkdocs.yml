@@ -27,6 +27,7 @@ markdown_extensions:
   - tables
 nav:
   - Home: index.md
+  - Overview (plain English): EXPLAINER.md
   - Whitepaper: WHITEPAPER.md
   - Results: RESULTS.md
   - Roadmap: PLAN.md
