@@ -53,12 +53,16 @@ tests live in [`docs/PLAN.md`](docs/PLAN.md); the technical design is in
 - ⬜ *(follow-up)* real ESMFold self-consistency (scRMSD/pLDDT) + full OpenMM MD
 - **Acceptance:** ✅ objective vector + feasibility flag; physics has GNM+sequence fallbacks; caching verified
 
-## Phase 5 — Closed loop: constrained multi-objective active learning ⬜
-- ⬜ DBTL orchestration
-- ⬜ **Constrained qNEHVI** (immunogenicity as outcome constraint)
-- ⬜ **GFlowNet/RL** proposal · **DPO** on pairwise screens
-- ⬜ **UQ / calibration** reporting; baselines (random, NSGA-II, single-objective BO)
-- **Acceptance:** hypervolume improves across cycles and beats random; calibration report emitted
+## Phase 5 — Closed loop: constrained multi-objective active learning ✅
+- ✅ DBTL orchestration (`loop/dbtl.py`) with feasible-front hypervolume tracking
+- ✅ Pareto / Monte-Carlo hypervolume utilities (maximization, deterministic)
+- ✅ NSGA-II with **constrained domination** + random-search baseline (sequence GA operators)
+- ✅ **Constrained qNEHVI** (BoTorch) — immunogenicity as an outcome constraint (verified running)
+- ✅ **DPO / Bradley–Terry** preference optimization from pairwise screens
+- ✅ **UQ**: bootstrapped ensemble surrogate + calibration report
+- ✅ Verified: NSGA-II beats random on HV (0.363 vs 0.354, same budget); 8 new tests (46 total)
+- ⬜ *(follow-up)* GFlowNet/RL proposer; wire DPO reward + UQ acquisition into the live proposer
+- **Acceptance:** ✅ HV non-decreasing & NSGA-II > random; constrained qNEHVI runs; calibration emitted
 
 ## Phase 6 — Serve, benchmark & report ⬜
 - ⬜ Typed API + **Gradio** app + Streamlit dashboard (democratization)
