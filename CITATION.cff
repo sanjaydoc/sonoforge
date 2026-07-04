@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use SonoForge in your work, please cite it as below."
+title: >-
+  SonoForge: A closed-loop DBTL backbone for de novo design of
+  ultrasound-coupling neural biomolecules
+authors:
+  - family-names: Anbu
+    given-names: Sanjay
+    name-prefix: Dr.
+    email: dr.sanjayanbu@gmail.com
+version: 0.1.0
+date-released: "2026-07-04"
+license: MIT
+repository-code: "https://github.com/sanjaydoc/sonoforge"
+url: "https://github.com/sanjaydoc/sonoforge"
+keywords:
+  - de novo protein design
+  - flow matching
+  - Bayesian optimization
+  - gas vesicles
+  - acoustic reporter genes
+  - brain-computer interface
+  - molecular dynamics

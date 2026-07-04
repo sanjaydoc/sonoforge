@@ -16,11 +16,14 @@ tests live in [`docs/PLAN.md`](docs/PLAN.md); the technical design is in
 - ✅ Runnable script stubs (`download_data.py`, `run_cycle.py`) + passing test suite
 - **Acceptance:** `pip install -e .` ✓ · `ruff check` ✓ · `pytest` ✓ · docs build ✓
 
-## Phase 1 — Data layer & Candidate schema ⬜
-- ⬜ Fetch GvpA/GvpC + ARG variant panels (RCSB / UniProt)
-- ⬜ Featurization (sequence + structure) → `Candidate`
-- ⬜ Disk-cached loaders; dedup + length filtering
-- **Acceptance:** `download_data.py` populates real records; load→featurize→serialize round-trip test
+## Phase 1 — Data layer & Candidate schema ✅
+- ✅ Fetch GvpA/GvpC from UniProt REST (disk-cached) + labelled synthetic offline fallback
+- ✅ Sequence featurization: interpretable descriptor (`SequenceFeaturizer`) + `one_hot`
+- ✅ Length filtering + case-insensitive dedup + non-standard-residue rejection
+- ✅ `records_to_candidates` (provenance-carrying) + JSONL save/load round-trip
+- ✅ `download_data.py` builds a `seed_library.jsonl` + manifest
+- ⬜ *(deferred to Phase 3/4)* structure-based featurization (needs backbones/folding)
+- **Acceptance:** ✅ 8 data tests green; offline build produces valid Candidates; round-trip verified
 
 ## Phase 2 — Mamba/S4 protein language model ⬜
 - ⬜ State-space PLM; pretrain hook + fine-tune on GV family (transfer learning)

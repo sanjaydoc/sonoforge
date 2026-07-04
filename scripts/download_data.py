@@ -1,32 +1,45 @@
-"""Download the target + seed data for SonoForge (Phase 1 will flesh this out).
+"""Download & assemble the SonoForge seed dataset (Phase 1).
 
-Fetches gas-vesicle shell proteins (GvpA / GvpC) and available acoustic-reporter
-structures/sequences from public sources (RCSB PDB, UniProt). This Phase 0 stub
-documents the intended interface and writes a manifest so the rest of the loop
-has a stable contract to build against.
+Fetches gas-vesicle shell proteins (GvpA / GvpC) from UniProt, length-filters,
+deduplicates, converts to validated ``Candidate``s, and writes a JSONL library
+plus a manifest. Falls back to clearly-labelled synthetic seeds when offline so
+the pipeline still runs; a warning is printed in that case.
 """
 
 from __future__ import annotations
 
 import json
+from collections import Counter
 from pathlib import Path
 
-DATA_DIR = Path(__file__).resolve().parents[1] / "data"
+from sonoforge.data import build_dataset, save_candidates
 
-# Seed targets. UniProt accessions are placeholders to be verified in Phase 1.
-SEED_TARGETS = [
-    {"name": "GvpA", "role": "primary gas-vesicle shell protein", "uniprot": "TBD"},
-    {"name": "GvpC", "role": "scaffolding protein; tunes collapse pressure", "uniprot": "TBD"},
-]
+DATA_DIR = Path(__file__).resolve().parents[1] / "data"
+CACHE_DIR = DATA_DIR / "cache"
+LIBRARY = DATA_DIR / "seed_library.jsonl"
+MANIFEST = DATA_DIR / "manifest.json"
 
 
 def main() -> None:
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    manifest = {"targets": SEED_TARGETS, "note": "Phase 0 stub — Phase 1 will fetch real records."}
-    out = DATA_DIR / "manifest.json"
-    out.write_text(json.dumps(manifest, indent=2))
-    print(f"Wrote seed manifest to {out}")
-    print("TODO(Phase 1): fetch GvpA/GvpC records + ARG variant panels from RCSB/UniProt.")
+    candidates = build_dataset(cache_dir=CACHE_DIR)
+    save_candidates(candidates, LIBRARY)
+
+    by_source = Counter(c.meta.get("source", "unknown") for c in candidates)
+    by_gene = Counter(c.meta.get("gene", "unknown") for c in candidates)
+    manifest = {
+        "n_candidates": len(candidates),
+        "by_source": dict(by_source),
+        "by_gene": dict(by_gene),
+        "library": str(LIBRARY.relative_to(DATA_DIR.parent)),
+    }
+    MANIFEST.write_text(json.dumps(manifest, indent=2))
+
+    print(f"Wrote {len(candidates)} candidates -> {LIBRARY}")
+    print(f"  by source: {dict(by_source)}")
+    print(f"  by gene:   {dict(by_gene)}")
+    if by_source.get("synthetic-seed"):
+        print("  WARNING: used synthetic seeds (UniProt unreachable). "
+              "Re-run with network access for real records.")
 
 
 if __name__ == "__main__":

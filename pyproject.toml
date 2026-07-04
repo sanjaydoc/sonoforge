@@ -9,7 +9,7 @@ description = "Closed-loop DBTL optimization backbone for de novo design of ultr
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "Dr. Sanjay Anbu" }]
+authors = [{ name = "Dr. Sanjay Anbu", email = "dr.sanjayanbu@gmail.com" }]
 keywords = ["de-novo-design", "protein-design", "flow-matching", "bayesian-optimization", "gas-vesicles", "acoustic-reporter-genes", "brain-computer-interface", "molecular-dynamics"]
 
 dependencies = [
