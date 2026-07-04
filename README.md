@@ -65,22 +65,42 @@ flowchart TD
 
 ## Quickstart
 
+**macOS / Linux**
 ```bash
-# 1. Environment
-python -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"
-
-# 2. Fetch the target + seed data (gas-vesicle proteins, ARG variants)
-python scripts/download_data.py
-
-# 3. Run one DBTL cycle (torch-free fallback works with no GPU/weights)
-python scripts/run_cycle.py --n-cycles 5 --library-size 32
-
-# 4. Explore results
-streamlit run src/sonoforge/serve/dashboard.py
-# or serve the model to non-experts:
-python -m sonoforge.serve.api
+git clone https://github.com/sanjaydoc/sonoforge.git && cd sonoforge
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e ".[dev]"                                   # core (fast, no GPU)
+python scripts/download_data.py                           # fetch GvpA/GvpC seed data
+python scripts/run_cycle.py --optimizer nsga2 --n-cycles 6   # run one DBTL loop
 ```
+
+**Windows (cmd)**
+```cmd
+git clone https://github.com/sanjaydoc/sonoforge.git && cd sonoforge
+python -m venv .venv
+.venv\Scripts\activate.bat
+pip install -e ".[dev]"
+python scripts\download_data.py
+python scripts\run_cycle.py --optimizer nsga2 --n-cycles 6
+```
+*(Windows PowerShell: activate with `.\.venv\Scripts\Activate.ps1` instead.)*
+
+**Explore the results**
+```bash
+# macOS/Linux
+pip install -e ".[serve]" && streamlit run src/sonoforge/serve/dashboard.py
+# Windows
+pip install -e ".[serve]" && streamlit run src\sonoforge\serve\dashboard.py
+```
+Then open http://localhost:8501. Or serve to non-experts: `python -m sonoforge.serve.api`.
+
+**Real ML models** (Mamba PLM, qNEHVI, GFlowNet — bigger install):
+```bash
+pip install -e ".[ml]"
+python scripts/run_cycle.py --optimizer qnehvi --n-cycles 6      # Bayesian optimization (benchmark winner)
+```
+
+📖 **Full step-by-step guide (all OSes, dashboard, ML, troubleshooting):** [`RUN.md`](RUN.md) · every command annotated: [`How-To-Run-Commands.txt`](How-To-Run-Commands.txt)
 
 The stack degrades gracefully: every heavy component (Mamba PLM, flow model, OpenMM, ESMFold) has a lightweight CPU fallback so the **loop and tests run end-to-end on a laptop** before any weights are downloaded.
 
