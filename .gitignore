@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.env
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+.mypy_cache/
+
+# Data / artifacts (kept out of git; use DVC or download scripts)
+# Anchored to repo root so the src/sonoforge/data package is NOT ignored.
+/data/
+!/data/.gitkeep
+outputs/
+runs/
+mlruns/
+*.pdb
+*.cif
+*.pt
+*.ckpt
+*.npz
+
+# Docs build
+site/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

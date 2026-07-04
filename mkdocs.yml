@@ -1,0 +1,34 @@
+site_name: SonoForge
+site_description: Closed-loop DBTL backbone for de novo design of ultrasound-coupling neural biomolecules
+site_url: https://sanjaydoc.github.io/sonoforge
+repo_url: https://github.com/sanjaydoc/sonoforge
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle: { icon: material/weather-night, name: Dark mode }
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle: { icon: material/weather-sunny, name: Light mode }
+  features:
+    - navigation.sections
+    - content.code.copy
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight
+  - tables
+nav:
+  - Home: index.md
+  - Whitepaper: WHITEPAPER.md
+  - Roadmap: PLAN.md
+  - Cards:
+      - Model card: cards/model_card.md
+      - Dataset card: cards/dataset_card.md
