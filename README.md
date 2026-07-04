@@ -110,7 +110,7 @@ sonoforge/
 | **0** | Scaffold, docs & scientific plan | ✅ |
 | **1** | Data layer & `Candidate` schema (GvpA/GvpC, ARG panels) | ✅ |
 | **2** | Mamba/S4 protein language model (transfer learning) | ✅ |
-| **3** | SE(3) frame flow-matching generator (PyTorch + JAX) | ⬜ |
+| **3** | SE(3) flow-matching generator (PyTorch + JAX) | ✅ |
 | **4** | Oracle stack — OpenMM physics + immunogenicity constraint | ⬜ |
 | **5** | Closed loop — constrained qNEHVI + GFlowNet/RL + DPO + UQ | ⬜ |
 | **6** | Serve, benchmark & report (API + Gradio + dashboard) | ⬜ |

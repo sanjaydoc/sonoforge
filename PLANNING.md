@@ -33,11 +33,14 @@ tests live in [`docs/PLAN.md`](docs/PLAN.md); the technical design is in
 - ⬜ *(follow-up)* ESM-2 PLL fallback + real pretraining corpus + checkpoint save/load in loop
 - **Acceptance:** ✅ synthetic smoke-train converges; APIs well-shaped; fallback tested (torch-free CI path)
 
-## Phase 3 — SE(3) frame flow-matching generator ⬜
-- ⬜ Conditional flow matching over residue frames; equivariant velocity field (PyTorch)
-- ⬜ JAX/Flax reference equivariant layer
-- ⬜ Sampler
-- **Acceptance:** equivariance unit test passes; synthetic backbone sampling smoke test
+## Phase 3 — SE(3) flow-matching generator ✅
+- ✅ E(3)-equivariant EGNN velocity field (PyTorch) — features invariant, coords equivariant
+- ✅ Conditional (OT-path) flow matching over Cα coordinates + Euler ODE sampler
+- ✅ Rigid-frame utilities (Gram–Schmidt N–Cα–C, apply/invert, proper-rotation checks)
+- ✅ **JAX/Flax** reference equivariant layer (param-free + learnable Flax module)
+- ✅ Verified: SE(3)-equivariance test passes; flow loss decreases; sampling smoke test
+- ⬜ *(extension)* full SO(3) frame-level flow (orientation channel) on top of the Cα flow
+- **Acceptance:** ✅ equivariance unit test passes (torch + jax); backbone sampling smoke test green
 
 ## Phase 4 — Oracle stack (physics + immunogenicity) ⬜
 - ⬜ Contrast proxy · **OpenMM collapse-pressure** · expressibility/solubility
