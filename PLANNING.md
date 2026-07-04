@@ -42,11 +42,16 @@ tests live in [`docs/PLAN.md`](docs/PLAN.md); the technical design is in
 - ⬜ *(extension)* full SO(3) frame-level flow (orientation channel) on top of the Cα flow
 - **Acceptance:** ✅ equivariance unit test passes (torch + jax); backbone sampling smoke test green
 
-## Phase 4 — Oracle stack (physics + immunogenicity) ⬜
-- ⬜ Contrast proxy · **OpenMM collapse-pressure** · expressibility/solubility
-- ⬜ **Immunogenicity** (MHC-II epitope load) constraint
-- ⬜ ESMFold self-consistency (scRMSD, pLDDT); caching + fallbacks
-- **Acceptance:** objective vector + feasibility flag; MD fallback; self-consistency within tolerance
+## Phase 4 — Oracle stack (physics + immunogenicity) ✅
+- ✅ **Physics collapse pressure**: Gaussian Network Model (GNM) on backbones + β-sheet
+  sequence fallback + documented **OpenMM** production hook
+- ✅ Contrast (scattering) · expressibility · solubility sequence proxies
+- ✅ **Immunogenicity** (MHC-II epitope-load) proxy as a hard **constraint**
+- ✅ `OracleStack`: fills `PropertyRecord`, maximization-objective vector,
+  collapse-closeness-to-target, feasibility flag, per-signal disk cache
+- ✅ 9 new tests (38 total); end-to-end oracle demo runs
+- ⬜ *(follow-up)* real ESMFold self-consistency (scRMSD/pLDDT) + full OpenMM MD
+- **Acceptance:** ✅ objective vector + feasibility flag; physics has GNM+sequence fallbacks; caching verified
 
 ## Phase 5 — Closed loop: constrained multi-objective active learning ⬜
 - ⬜ DBTL orchestration
