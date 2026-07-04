@@ -113,9 +113,26 @@ sonoforge/
 | **3** | SE(3) flow-matching generator (PyTorch + JAX) | ✅ |
 | **4** | Oracle stack — physics (GNM/OpenMM) + immunogenicity constraint | ✅ |
 | **5** | Closed loop — constrained qNEHVI + NSGA-II + DPO + UQ | ✅ |
-| **6** | Serve, benchmark & report (API + Gradio + dashboard) | ⬜ |
+| **6** | Serve, benchmark & report (API + Gradio + dashboard) | ✅ |
 
 Live sub-task tracker: [`PLANNING.md`](PLANNING.md) · Detailed roadmap + acceptance tests: [`docs/PLAN.md`](docs/PLAN.md) · Technical design: [`docs/WHITEPAPER.md`](docs/WHITEPAPER.md).
+
+## Results
+
+Head-to-head on the closed loop — mean final **feasible-front hypervolume** across
+5 seeds (identical budget: 6 cycles, library 16), immunogenicity as a hard
+constraint (higher is better):
+
+| optimizer | final HV (mean ± std) |
+|---|---|
+| **qNEHVI (BoTorch)** | **0.439 ± 0.016** |
+| NSGA-II | 0.389 ± 0.019 |
+| random (baseline) | 0.384 ± 0.014 |
+
+Constrained **Bayesian optimization wins decisively** — its margin over both
+baselines exceeds the across-seed noise. Reproduce with
+`python benchmarks/benchmark_optimizers.py`. Full discussion in
+[`docs/RESULTS.md`](docs/RESULTS.md).
 
 ## Scientific honesty
 

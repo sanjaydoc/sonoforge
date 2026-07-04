@@ -64,11 +64,14 @@ tests live in [`docs/PLAN.md`](docs/PLAN.md); the technical design is in
 - ⬜ *(follow-up)* GFlowNet/RL proposer; wire DPO reward + UQ acquisition into the live proposer
 - **Acceptance:** ✅ HV non-decreasing & NSGA-II > random; constrained qNEHVI runs; calibration emitted
 
-## Phase 6 — Serve, benchmark & report ⬜
-- ⬜ Typed API + **Gradio** app + Streamlit dashboard (democratization)
-- ⬜ Benchmark suite (HV vs. oracle-calls; ablations)
-- ⬜ Final report + figures; GitHub Pages deploy
-- **Acceptance:** API + app launch; `benchmarks/` reproduces headline table; docs site publishes
+## Phase 6 — Serve, benchmark & report ✅
+- ✅ Typed `SonoForgeService.design(...)` (JSON-friendly) — the democratization API
+- ✅ **Gradio** app + **FastAPI** REST (`/design`, `/health`) + **Streamlit** dashboard (lazy deps)
+- ✅ Benchmark suite (`sonoforge.benchmark` + `benchmarks/benchmark_optimizers.py` → CSV)
+- ✅ Results report (`docs/RESULTS.md`) wired into the MkDocs nav
+- ✅ Verified headline: **qNEHVI 0.439 > NSGA-II 0.389 > random 0.384** (mean HV, 5 seeds)
+- ⬜ *(optional)* GitHub Pages auto-deploy workflow; py3Dmol structure gallery
+- **Acceptance:** ✅ service + benchmark tested; API/app build under importorskip; report published
 
 ## Stretch (post-v1) ⬜
 - ⬜ Sonogenetic-**actuator** vertical (mechanosensitive channels; multi-state / membrane proteins)

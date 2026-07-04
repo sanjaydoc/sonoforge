@@ -28,6 +28,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Whitepaper: WHITEPAPER.md
+  - Results: RESULTS.md
   - Roadmap: PLAN.md
   - Cards:
       - Model card: cards/model_card.md
