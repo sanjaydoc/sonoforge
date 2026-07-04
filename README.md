@@ -112,7 +112,7 @@ sonoforge/
 | **2** | Mamba/S4 protein language model (transfer learning) | ✅ |
 | **3** | SE(3) flow-matching generator (PyTorch + JAX) | ✅ |
 | **4** | Oracle stack — physics (GNM/OpenMM) + immunogenicity constraint | ✅ |
-| **5** | Closed loop — constrained qNEHVI + NSGA-II + DPO + UQ | ✅ |
+| **5** | Closed loop — constrained qNEHVI + NSGA-II + GFlowNet + DPO + UQ | ✅ |
 | **6** | Serve, benchmark & report (API + Gradio + dashboard) | ✅ |
 
 Live sub-task tracker: [`PLANNING.md`](PLANNING.md) · Detailed roadmap + acceptance tests: [`docs/PLAN.md`](docs/PLAN.md) · Technical design: [`docs/WHITEPAPER.md`](docs/WHITEPAPER.md).

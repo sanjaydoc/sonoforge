@@ -13,7 +13,14 @@ from pathlib import Path
 
 from sonoforge.data.types import AA_ALPHABET, Candidate
 from sonoforge.loop.dbtl import DBTLoop
-from sonoforge.optimize import NSGA2Proposer, QNEHVIProposer, RandomProposer, botorch_available
+from sonoforge.optimize import (
+    GFlowNetProposer,
+    NSGA2Proposer,
+    QNEHVIProposer,
+    RandomProposer,
+    botorch_available,
+)
+from sonoforge.optimize.gflownet import torch_available
 from sonoforge.oracle import OracleStack
 
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
@@ -42,6 +49,11 @@ def _proposer(name: str):
             print("botorch not installed; falling back to NSGA-II. Install '.[ml]' for qNEHVI.")
             return NSGA2Proposer()
         return QNEHVIProposer()
+    if name == "gflownet":
+        if not torch_available():
+            print("torch not installed; falling back to NSGA-II. Install '.[ml]' for GFlowNet.")
+            return NSGA2Proposer()
+        return GFlowNetProposer()
     raise ValueError(name)
 
 
@@ -50,7 +62,7 @@ def main() -> None:
     ap.add_argument("--n-cycles", type=int, default=5)
     ap.add_argument("--library-size", type=int, default=16)
     ap.add_argument("--n-seed", type=int, default=16)
-    ap.add_argument("--optimizer", choices=["qnehvi", "nsga2", "random"], default="nsga2")
+    ap.add_argument("--optimizer", choices=["qnehvi", "nsga2", "random", "gflownet"], default="nsga2")
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
 

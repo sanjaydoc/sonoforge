@@ -15,7 +15,14 @@ import numpy as np
 
 from sonoforge.data.types import AA_ALPHABET, Candidate
 from sonoforge.loop.dbtl import DBTLoop
-from sonoforge.optimize import NSGA2Proposer, QNEHVIProposer, RandomProposer, botorch_available
+from sonoforge.optimize import (
+    GFlowNetProposer,
+    NSGA2Proposer,
+    QNEHVIProposer,
+    RandomProposer,
+    botorch_available,
+)
+from sonoforge.optimize.gflownet import torch_available
 from sonoforge.oracle import OBJECTIVE_NAMES, OracleStack
 
 
@@ -45,6 +52,8 @@ def _proposer(name: str):
         return RandomProposer()
     if name == "qnehvi" and botorch_available():
         return QNEHVIProposer()
+    if name == "gflownet" and torch_available():
+        return GFlowNetProposer()
     return NSGA2Proposer()
 
 

@@ -7,6 +7,7 @@
 """
 
 from sonoforge.optimize.base import Evaluated, Proposer
+from sonoforge.optimize.gflownet import GFlowNetProposer
 from sonoforge.optimize.nsga2 import NSGA2Proposer
 from sonoforge.optimize.pareto import hypervolume, non_dominated_mask, pareto_front
 from sonoforge.optimize.preference import PreferenceModel, make_preference_pairs
@@ -17,6 +18,7 @@ from sonoforge.optimize.uq import EnsembleSurrogate, calibration_report
 __all__ = [
     "EnsembleSurrogate",
     "Evaluated",
+    "GFlowNetProposer",
     "NSGA2Proposer",
     "PreferenceModel",
     "Proposer",

@@ -1,0 +1,159 @@
+===============================================================================
+ SonoForge — How To Run (command reference)
+ Author: Dr. Sanjay Anbu
+===============================================================================
+
+Every command below is safe to run top-to-bottom. The core loop and tests run
+WITHOUT a GPU and WITHOUT the heavy ML libraries (torch/botorch/jax) thanks to
+built-in fallbacks; the ML extras just unlock the "real" models.
+
+-------------------------------------------------------------------------------
+ 0. ENVIRONMENT SETUP (one time)
+-------------------------------------------------------------------------------
+
+python -m venv .venv
+    Create an isolated Python environment in ./.venv so project packages don't
+    touch your system Python. (Python 3.10+ required.)
+
+source .venv/bin/activate          # Linux / macOS
+.\.venv\Scripts\Activate.ps1       # Windows PowerShell
+    Activate the environment. Run this every time you open a new terminal.
+
+pip install -e ".[dev]"
+    Install SonoForge in editable mode plus the DEV tools (pytest, ruff,
+    mkdocs). This is all you need for the loop, the tests, and the docs.
+    NOTE: '-e' = editable, so code edits take effect without reinstalling.
+
+pip install -e ".[ml]"
+    OPTIONAL. Adds the heavy ML backends: PyTorch (Mamba PLM, SE(3) generator,
+    GFlowNet), BoTorch/GPyTorch (qNEHVI), fair-esm. Install this to run the
+    real models instead of the numpy fallbacks.
+
+pip install -e ".[serve]"
+    OPTIONAL. Adds Gradio, FastAPI, Streamlit for the web app / API / dashboard.
+
+pip install -e ".[physics]"
+    OPTIONAL. Adds OpenMM for the (future) full molecular-dynamics collapse-
+    pressure pipeline. The GNM physics proxy works without it.
+
+-------------------------------------------------------------------------------
+ 1. DATA
+-------------------------------------------------------------------------------
+
+python scripts/download_data.py
+    Fetch the gas-vesicle target proteins (GvpA / GvpC) from UniProt, filter by
+    length, de-duplicate, and write a seed library to data/seed_library.jsonl
+    plus data/manifest.json. If the network is unavailable it falls back to
+    clearly-labelled SYNTHETIC seeds and prints a warning (nothing fake is ever
+    passed off as real).
+
+-------------------------------------------------------------------------------
+ 2. THE CLOSED LOOP (Design -> Build -> Test -> Learn)
+-------------------------------------------------------------------------------
+
+python scripts/run_cycle.py
+    Run the full DBTL loop with default settings (NSGA-II, 5 cycles). Prints the
+    feasible-front hypervolume trajectory and the final Pareto-set size.
+
+python scripts/run_cycle.py --optimizer nsga2 --n-cycles 6 --library-size 16 --n-seed 16 --seed 0
+    Same, with explicit knobs:
+      --optimizer     which search strategy: random | nsga2 | qnehvi | gflownet
+      --n-cycles      how many DBTL rounds to run
+      --library-size  how many new candidates to propose per round
+      --n-seed        how many starting sequences to seed from
+      --seed          RNG seed (reproducibility)
+
+python scripts/run_cycle.py --optimizer random
+    Baseline: random search (no selection pressure) — the bar to beat.
+
+python scripts/run_cycle.py --optimizer qnehvi
+    Constrained Bayesian optimization (needs '.[ml]'; falls back to NSGA-II if
+    BoTorch is missing). Best sample efficiency under tight budgets.
+
+python scripts/run_cycle.py --optimizer gflownet
+    GFlowNet proposer (needs '.[ml]'): samples DIVERSE high-reward candidates.
+
+-------------------------------------------------------------------------------
+ 3. TRAIN THE MODELS (optional, needs '.[ml]')
+-------------------------------------------------------------------------------
+
+python -m sonoforge.plm.train --synthetic --epochs 5
+    Smoke-train the Mamba/S4 protein language model on synthetic data. Prints a
+    decreasing masked-LM loss to confirm it learns. Drop --synthetic to train on
+    data/seed_library.jsonl instead.
+
+python -m sonoforge.generative.train --steps 50 --n-res 8
+    Smoke-train the SE(3)-equivariant flow-matching backbone generator on a
+    synthetic helix, then sample backbones. Prints a decreasing flow-matching
+    loss and the sampled backbone shape.
+
+-------------------------------------------------------------------------------
+ 4. BENCHMARK
+-------------------------------------------------------------------------------
+
+python benchmarks/benchmark_optimizers.py --n-seeds 5 --n-cycles 6
+    Run every available optimizer through identical budgets across several seeds
+    and print the mean final hypervolume table (higher = better). Writes
+    benchmarks/results.csv. This reproduces the headline result in docs/RESULTS.md
+    (qNEHVI > NSGA-II > random). Include qNEHVI/GFlowNet by installing '.[ml]'.
+
+-------------------------------------------------------------------------------
+ 5. SERVE THE MODEL (democratization; needs '.[serve]')
+-------------------------------------------------------------------------------
+
+python -m sonoforge.serve.app
+    Launch the Gradio "design-an-ARG" web app: pick an optimizer + budget, click,
+    and get ranked, feasibility-checked designs. Opens in your browser.
+
+python -m sonoforge.serve.api
+    Start the FastAPI REST server on http://localhost:8000 with:
+      GET  /health   -> {"status":"ok"}
+      POST /design   -> JSON body {optimizer, n_cycles, library_size, top_k}
+    Returns ranked designs as JSON (for non-experts / downstream systems).
+
+streamlit run src/sonoforge/serve/dashboard.py
+    Launch the interactive dashboard: hypervolume trajectory, feasibility curve,
+    and a table of top designs.
+
+python -c "from sonoforge.serve import SonoForgeService; \
+           r=SonoForgeService().design(n_cycles=5); \
+           print(r.designs[0])"
+    Use the typed Python API directly — one call returns ranked designs.
+
+-------------------------------------------------------------------------------
+ 6. TESTS, LINT, DOCS
+-------------------------------------------------------------------------------
+
+pytest -q
+    Run the full test suite (~50 tests). Tests needing torch/botorch/jax are
+    skipped automatically when those libs aren't installed.
+
+ruff check src tests scripts benchmarks
+    Lint the code (style + common bugs). Add '--fix' to auto-fix.
+
+mkdocs serve
+    Preview the documentation site locally at http://127.0.0.1:8000
+    (README, whitepaper, results, roadmap, model/dataset cards).
+
+mkdocs build
+    Build the static docs into ./site (what GitHub Pages publishes).
+
+-------------------------------------------------------------------------------
+ 7. DOCKER (reproducible CPU environment)
+-------------------------------------------------------------------------------
+
+docker build -t sonoforge .
+    Build a minimal CPU image with the fast (fallback) path installed.
+
+docker run --rm sonoforge
+    Run the image; prints the package version to confirm the build works.
+
+===============================================================================
+ QUICK START (copy/paste)
+===============================================================================
+ python -m venv .venv && source .venv/bin/activate
+ pip install -e ".[dev]"
+ python scripts/download_data.py
+ python scripts/run_cycle.py --optimizer nsga2 --n-cycles 6
+ pytest -q
+===============================================================================

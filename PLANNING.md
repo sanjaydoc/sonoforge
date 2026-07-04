@@ -60,8 +60,11 @@ tests live in [`docs/PLAN.md`](docs/PLAN.md); the technical design is in
 - ✅ **Constrained qNEHVI** (BoTorch) — immunogenicity as an outcome constraint (verified running)
 - ✅ **DPO / Bradley–Terry** preference optimization from pairwise screens
 - ✅ **UQ**: bootstrapped ensemble surrogate + calibration report
-- ✅ Verified: NSGA-II beats random on HV (0.363 vs 0.354, same budget); 8 new tests (46 total)
-- ⬜ *(follow-up)* GFlowNet/RL proposer; wire DPO reward + UQ acquisition into the live proposer
+- ✅ **GFlowNet proposer**: GRU policy trained with Trajectory Balance against a
+  surrogate reward — diverse, reward-proportional library generation (verified: TB
+  loss ↓, diverse valid designs, HV 0.339 → 0.370)
+- ✅ Verified: NSGA-II beats random on HV (0.363 vs 0.354, same budget); qNEHVI wins overall
+- ⬜ *(follow-up)* wire DPO reward + UQ acquisition into the live proposer
 - **Acceptance:** ✅ HV non-decreasing & NSGA-II > random; constrained qNEHVI runs; calibration emitted
 
 ## Phase 6 — Serve, benchmark & report ✅
