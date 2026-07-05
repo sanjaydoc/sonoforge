@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://sanjaydoc.github.io/sonoforge/</loc>
+         <lastmod>2026-07-05</lastmod>
+    </url>
+    <url>
+         <loc>https://sanjaydoc.github.io/sonoforge/EXPLAINER/</loc>
+         <lastmod>2026-07-05</lastmod>
+    </url>
+    <url>
+         <loc>https://sanjaydoc.github.io/sonoforge/PLAN/</loc>
+         <lastmod>2026-07-05</lastmod>
+    </url>
+    <url>
+         <loc>https://sanjaydoc.github.io/sonoforge/RESULTS/</loc>
+         <lastmod>2026-07-05</lastmod>
+    </url>
+    <url>
+         <loc>https://sanjaydoc.github.io/sonoforge/WHITEPAPER/</loc>
+         <lastmod>2026-07-05</lastmod>
+    </url>
+    <url>
+         <loc>https://sanjaydoc.github.io/sonoforge/cards/dataset_card/</loc>
+         <lastmod>2026-07-05</lastmod>
+    </url>
+    <url>
+         <loc>https://sanjaydoc.github.io/sonoforge/cards/model_card/</loc>
+         <lastmod>2026-07-05</lastmod>
+    </url>
+</urlset>
